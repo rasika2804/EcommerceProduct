@@ -1,0 +1,30 @@
+version: "3"
+services: 
+    web: 
+      build: ./Backend
+      container_name: ecommerceproduct
+      image: ecommerce-product
+      volumes:
+        - product-ecommerce-node:/usr/src/app/public
+      ports:
+        - "3001:8000"
+      links:
+        - "db:db"
+
+    
+    db:
+      build: ./db
+      image: ecommerce-db
+      command: --default-authentication-plugin=mysql_native_password
+      restart: always
+      container_name: ecommerce-dn-mysql
+      ports:
+        - "8432:3306"
+      volumes:
+        - product-ecommerce-mysql:/var/lib/mysql
+
+
+volumes:
+    product-ecommerce-node:
+    product-ecommerce-mysql:
+    
