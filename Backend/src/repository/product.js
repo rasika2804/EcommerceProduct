@@ -1,10 +1,10 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    host: 'localhost',
+    host: 'db',
     user: 'root',
     password: 'root12345',
-    database: 'ecommerce',
+    database: 'products',
     insecureAuth : true
 });
 
