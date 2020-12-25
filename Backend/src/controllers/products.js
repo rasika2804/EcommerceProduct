@@ -53,16 +53,13 @@ exports.getNthHighestPrice = async(req, res) => {
 
 exports.uploadBulkFiles = async(req, res) => {
     try {
-        const {type} = req.query;
-        console.log("req type---->", type);
+        //const type = req.files;
+        //console.log("req type---->", type);
         uploads(req, res, async (err) => {
             if (err) {
                 res.status(500);
             }
-            req.file.userId=req.userData.id;
-            req.file.type=type;
-            req.file.url=req.file.path;
-                let uploadedFile = await ProductRepo.uploadFiles(req.file);
+            let uploadedFile = await ProductRepo.uploadFiles(req.files);
             if (!uploadedFile) {
                 res.status(400).json({ message: 'Error while uploading file!' })
             } else {
@@ -71,6 +68,7 @@ exports.uploadBulkFiles = async(req, res) => {
         })
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({message: "Something went wrong"});
     }
 }

@@ -1,14 +1,12 @@
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
-    host: 'db',
+    host: 'localhost',
     user: 'root',
     password: 'root12345',
-    database: 'products',
+    database: 'ecommerce',
     insecureAuth : true
 });
-
-
 
 connection.connect((err) => {
     if(err){
@@ -58,15 +56,27 @@ exports.getHighestPrice = async(num) => {
     })
 }
 
-// exports.uploadFiles = async(file) => {
-//     return new Promise( async (reject, resolve) => {
-//         try {
-//             await connection.query(`insert into products(fileName, mimeType, encoding, originalName, url) values`, [], (error, result) => {
-//                 if(error) throw error;
-//                 return resolve(result);
-//             });
-//         } catch (error) {
-//             return resolve(error);
-//         }
-//     })
-// }
+exports.uploadFiles = async(fileArray) => {
+    return new Promise( async (reject, resolve) => {
+        try {
+            let result;
+            const query = `insert into bulkUploads(fileName, mimeType, encoding, originalName, url) values(?,?,?,?,?)`;
+            if(fileArray && fileArray.length > 0){
+                for(let file of fileArray){
+                    try {
+                        result = await connection.query(query, [file.filename, file.mimetype, file.encoding, file.originalname, file.destination]);
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                if(result){
+                    return resolve(result);
+                } else {
+                   return result;
+                }
+            }
+        } catch (error) {
+            return reject(error);
+        }
+    })
+}
